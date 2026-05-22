@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Architectural Index — Architecture on a Map</title>
+  <meta name="description" content="Discover, visit, and share the world's architecture. The Architectural Index puts buildings on a map so you can explore them by location.">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #e9e9e9;
+      --surface: #f0f0f0;
+      --text: #0a0a0a;
+      --border: #cccccc;
+      --gray-400: #999999;
+      --gray-500: #777777;
+      --gray-600: #555555;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 25px;
+    }
+
+    /* Nav */
+    nav {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-brand {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .nav-contact a {
+      font-size: 14px;
+      color: var(--gray-600);
+      text-decoration: none;
+    }
+    .nav-contact a:hover { color: var(--text); }
+
+    /* Hero */
+    .hero {
+      padding: 100px 0 75px;
+    }
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      max-width: 580px;
+    }
+    .hero .tagline {
+      font-size: 20px;
+      margin-top: 25px;
+      color: var(--gray-600);
+      max-width: 440px;
+    }
+    .hero .region-note {
+      font-size: 14px;
+      margin-top: 12px;
+      color: var(--gray-500);
+    }
+
+    /* Phone mockup */
+    .phone-section {
+      padding: 50px 0 100px;
+    }
+    .phone-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+    .phone-frame {
+      width: 280px;
+      height: 560px;
+      border: 3px solid var(--text);
+      border-radius: 36px;
+      overflow: hidden;
+      background: var(--bg);
+      position: relative;
+    }
+    .phone-notch {
+      width: 100px;
+      height: 24px;
+      background: var(--text);
+      border-radius: 0 0 14px 14px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .phone-screen {
+      padding: 12px 16px;
+      height: calc(100% - 24px);
+      display: flex;
+      flex-direction: column;
+    }
+    .phone-header {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .phone-map {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      background: #f5f5f5;
+    }
+    .map-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.5;
+    }
+    .map-pin {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--text);
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+    }
+    .map-pin::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--text);
+    }
+    .pin-1 { top: 35%; left: 40%; }
+    .pin-2 { top: 45%; left: 55%; }
+    .pin-3 { top: 30%; left: 65%; }
+    .pin-4 { top: 55%; left: 35%; }
+    .pin-5 { top: 50%; left: 50%; }
+    .phone-tabs {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0 4px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+    }
+    .tab {
+      width: 32px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border);
+    }
+    .tab.active { background: var(--text); }
+
+    /* Features */
+    .features {
+      padding: 100px 0;
+    }
+    .features h2 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 50px;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 30px;
+    }
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border: 2px solid var(--text);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: var(--gray-600);
+      line-height: 1.6;
+    }
+
+    /* Development notice */
+    .dev-notice {
+      padding: 60px 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .dev-notice p {
+      font-size: 14px;
+      color: var(--gray-500);
+    }
+
+    /* Waitlist */
+    .waitlist {
+      padding: 100px 0;
+      text-align: center;
+    }
+    .waitlist h2 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .waitlist .sub {
+      font-size: 16px;
+      color: var(--gray-600);
+      margin-bottom: 40px;
+    }
+    .waitlist-form {
+      display: flex;
+      gap: 0;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .waitlist-form input {
+      flex: 1;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+      font-size: 16px;
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+    }
+    .waitlist-form input::placeholder { color: var(--gray-400); }
+    .waitlist-form input:focus { border-color: var(--text); }
+    .waitlist-form button {
+      padding: 14px 24px;
+      background: var(--text);
+      color: var(--bg);
+      border: 1px solid var(--text);
+      border-radius: 0 6px 6px 0;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .waitlist-form button:hover { opacity: 0.85; }
+    .waitlist-form button:disabled { opacity: 0.5; cursor: default; }
+    .waitlist-msg {
+      margin-top: 16px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+    .waitlist-msg.success { color: var(--gray-600); }
+    .waitlist-msg.error { color: #a04040; }
+
+    /* Footer */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+    }
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    footer p {
+      font-size: 13px;
+      color: var(--gray-500);
+    }
+    footer a {
+      color: var(--gray-600);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--text); }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .hero { padding: 60px 0 50px; }
+      .hero h1 { font-size: 36px; }
+      .hero .tagline { font-size: 17px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .waitlist-form { flex-direction: column; gap: 12px; }
+      .waitlist-form input { border-right: 1px solid var(--border); border-radius: 6px; }
+      .waitlist-form button { border-radius: 6px; }
+      .phone-frame { width: 240px; height: 480px; }
+      footer .container { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <div class="nav-brand">The Architectural Index</div>
+      <div class="nav-contact"><a href="mailto:hello@thearchitecturalindex.com">hello@thearchitecturalindex.com</a></div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Architecture<br>on a map.</h1>
+      <p class="tagline">Discover, visit, and share the buildings that shape our communities. Browse projects geographically, mark the ones you've been to, and contribute your own.</p>
+      <p class="region-note">Launching in Northwest Arkansas</p>
+    </div>
+  </section>
+
+  <section class="phone-section">
+    <div class="container">
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-header">The Architectural Index</div>
+            <div class="phone-map">
+              <div class="map-grid"></div>
+              <div class="map-pin pin-1"></div>
+              <div class="map-pin pin-2"></div>
+              <div class="map-pin pin-3"></div>
+              <div class="map-pin pin-4"></div>
+              <div class="map-pin pin-5"></div>
+            </div>
+            <div class="phone-tabs">
+              <div class="tab active"></div>
+              <div class="tab"></div>
+              <div class="tab"></div>
+              <div class="tab"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="container">
+      <h2>What you can do</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg>
+          </div>
+          <h3>Map & Discover</h3>
+          <p>Browse architectural projects on an interactive map. Filter by radius, search by name, architect, city, or building type.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <h3>Mark Visited</h3>
+          <p>Track the buildings you've experienced. Rate them, answer fun polls, and upload your own photos from the visit.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Community Feed</h3>
+          <p>See how other visitors experienced a building. Ratings, photos, and poll results from the community, all in one place.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          </div>
+          <h3>Submit Projects</h3>
+          <p>Know a building that's missing? Submit it for review. Help grow the map and make architecture more accessible to everyone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dev-notice">
+    <div class="container">
+      <p>Currently in development &middot; Northwest Arkansas launch coming soon</p>
+    </div>
+  </section>
+
+  <section class="waitlist" id="waitlist">
+    <div class="container">
+      <h2>Get notified at launch</h2>
+      <p class="sub">Join the waitlist and we'll let you know when the app is ready.</p>
+      <form class="waitlist-form" id="waitlist-form">
+        <input type="email" id="waitlist-email" placeholder="you@email.com" required autocomplete="email">
+        <button type="submit" id="waitlist-btn">Join Waitlist</button>
+      </form>
+      <div class="waitlist-msg" id="waitlist-msg"></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 The Architectural Index</p>
+      <a href="mailto:hello@thearchitecturalindex.com">hello@thearchitecturalindex.com</a>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var SUPABASE_URL = 'https://dabasnorsjdvbznjqqum.supabase.co';
+      var form = document.getElementById('waitlist-form');
+      var emailInput = document.getElementById('waitlist-email');
+      var btn = document.getElementById('waitlist-btn');
+      var msg = document.getElementById('waitlist-msg');
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var email = emailInput.value.trim();
+        if (!email) return;
+
+        btn.disabled = true;
+        btn.textContent = 'Joining...';
+        msg.className = 'waitlist-msg';
+        msg.textContent = '';
+
+        fetch(SUPABASE_URL + '/functions/v1/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data.error) {
+            msg.textContent = data.error === 'duplicate' ? "You're already on the list!" : data.error;
+            msg.className = 'waitlist-msg error';
+          } else {
+            msg.textContent = "You're on the list. We'll be in touch.";
+            msg.className = 'waitlist-msg success';
+            emailInput.value = '';
+          }
+        })
+        .catch(function() {
+          msg.textContent = "Something went wrong. Try again or email us directly.";
+          msg.className = 'waitlist-msg error';
+        })
+        .finally(function() {
+          btn.disabled = false;
+          btn.textContent = 'Join Waitlist';
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
