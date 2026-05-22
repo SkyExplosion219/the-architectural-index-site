@@ -429,6 +429,7 @@
   <script>
     (function() {
       var SUPABASE_URL = 'https://dabasnorsjdvbznjqqum.supabase.co';
+      var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhYmFzbm9yc2pkdmJ6bmpxcXVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3NDk5MjYsImV4cCI6MjA4NjMyNTkyNn0.iXLmW16BHrnw-Ufz6JTwpEiVx2qwfeAcM5vGnR2wFhQ';
       var form = document.getElementById('waitlist-form');
       var emailInput = document.getElementById('waitlist-email');
       var btn = document.getElementById('waitlist-btn');
@@ -446,7 +447,7 @@
 
         fetch(SUPABASE_URL + '/functions/v1/waitlist', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
           body: JSON.stringify({ email: email })
         })
         .then(function(res) { return res.json(); })
